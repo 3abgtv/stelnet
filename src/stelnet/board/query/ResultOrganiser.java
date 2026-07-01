@@ -31,6 +31,16 @@ public class ResultOrganiser {
         return submarkets;
     }
 
+    public List<CargoStackAPI> getColonyItems(ResultSet resultSet, MarketAPI market) {
+        List<CargoStackAPI> items = new LinkedList<>();
+        for (Result result : resultSet.getResultSet()) {
+            if (result.getMarket() == market && result.isColonyItem()) {
+                items.add(result.getCargoStack());
+            }
+        }
+        return items;
+    }
+
     public List<PersonAPI> getPeople(ResultSet resultSet, MarketAPI market) {
         List<PersonAPI> people = new LinkedList<>();
         for (Result result : resultSet.getResultSet()) {

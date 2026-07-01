@@ -1,13 +1,15 @@
 package stelnet.filter;
 
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import stelnet.board.query.Result;
 import stelnet.board.query.ResultSet;
 
 @EqualsAndHashCode(callSuper = false)
-public class ResultIsFriendly extends ResultFilter {
+@RequiredArgsConstructor
+public class ResultMarketFilter extends ResultFilter {
 
-    private final Filter filter = new FactionIsFriendly();
+    private final Filter filter;
 
     @Override
     protected boolean acceptResultSet(ResultSet resultSet) {

@@ -33,6 +33,7 @@ public class MarketView extends ResultView {
             marketHeader = new MarketHeader(market, intel);
             marketHeader.getShowButton().setEnabled(false);
             elements.add(marketHeader);
+            addColonyItems(elements, market, width);
             addPeople(elements, market, width);
             addSubmarkets(elements, market, width);
             elements.add(new Spacer(2 * UiConstants.DEFAULT_SPACER));

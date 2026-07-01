@@ -54,6 +54,11 @@ public class MarketView implements RenderableFactory {
             getTabPane(size, contentSize, buttonManager.getShipButtons()),
             isActive(ContentRenderer.SHIPS)
         );
+        tabViewContainer.addTab(
+            getTabButton(ContentRenderer.COLONY_ITEMS, Keyboard.KEY_C),
+            getTabPane(size, contentSize, buttonManager.getColonyButtons()),
+            isActive(ContentRenderer.COLONY_ITEMS)
+        );
 
         return tabViewContainer;
     }
@@ -68,6 +73,9 @@ public class MarketView implements RenderableFactory {
 
     private Renderable getTabPane(Size size, Size contentSize, Renderable[] buttons) {
         List<Renderable> elements = new ArrayList<>();
+        if (activeView instanceof InMarketStrategy) {
+            ((InMarketStrategy) activeView).setColonyItemsMode(isActive(ContentRenderer.COLONY_ITEMS));
+        }
         List<LocationContent> storageData = activeView.getData(buttonManager);
         addEmptyData(elements, storageData, contentSize.getWidth());
         addStorageData(elements, storageData);

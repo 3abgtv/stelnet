@@ -1,6 +1,7 @@
 package stelnet.filter;
 
 import com.fs.starfarer.api.campaign.CommDirectoryEntryAPI;
+import com.fs.starfarer.api.campaign.SpecialItemSpecAPI;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
@@ -54,6 +55,9 @@ public final class AnyHasTag extends Filter {
         }
         if (object instanceof WeaponSpecAPI) {
             return acceptWeapon((WeaponSpecAPI) object);
+        }
+        if (object instanceof SpecialItemSpecAPI) {
+            return acceptSpecialItem((SpecialItemSpecAPI) object);
         }
         return super.accept(object);
     }
@@ -118,5 +122,9 @@ public final class AnyHasTag extends Filter {
 
     protected boolean acceptWeapon(WeaponSpecAPI weapon) {
         return weapon.getTags().contains(tag);
+    }
+
+    protected boolean acceptSpecialItem(SpecialItemSpecAPI specialItem) {
+        return specialItem.hasTag(tag);
     }
 }

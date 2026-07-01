@@ -55,7 +55,8 @@ public class ItemQueryFactory extends QueryFactory {
         Set<Filter> filters = getFilters();
         PickerDialog picker = new ItemPickerDialog(
             StelnetHelper.makeCargoFromStacks(provider.getMatching(filters)),
-            this
+            this,
+            L10n.get(CommonL10n.ITEMS)
         );
         return new Button[] {
             new FindMatchingButton(this, L10n.get(CommonL10n.ITEMS)),

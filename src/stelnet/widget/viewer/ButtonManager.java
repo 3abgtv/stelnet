@@ -26,6 +26,7 @@ public class ButtonManager {
 
     private final Renderable[] itemButtons;
     private final Renderable[] shipButtons;
+    private final Renderable[] colonyButtons;
 
     private final Set<Filter> filters = new HashSet<>();
 
@@ -82,6 +83,10 @@ public class ButtonManager {
                 new Spacer(20),
                 new ShipFilterButton(this, CommonL10n.CARRIERS, new ShipHullHasHint(ShipTypeHints.CARRIER)),
                 new ShipFilterButton(this, CommonL10n.CIVILIANS, new ShipHullHasHint(ShipTypeHints.CIVILIAN)),
+            };
+        colonyButtons =
+            new Renderable[] {
+                new Spacer(2),
             };
     }
 

@@ -1,5 +1,7 @@
 package stelnet.board.query;
 
+import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
@@ -9,11 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import stelnet.util.L10n;
-import uilib.Renderable;
-import uilib.RenderableFactory;
-import uilib.ShowPeople;
-import uilib.Spacer;
-import uilib.UiConstants;
+import stelnet.util.StelnetHelper;
+import uilib.*;
 import uilib.property.Size;
 
 @RequiredArgsConstructor
@@ -40,6 +39,23 @@ public abstract class ResultView implements RenderableFactory {
         ShowPeople showPeople = new ShowPeople(people, L10n.get(QueryL10n.NO_MATCHING_PEOPLE), new Size(width, 0));
         showPeople.setGroupColor(getSupportColor(market.getFaction()));
         elements.add(showPeople);
+    }
+
+    protected void addColonyItems(List<Renderable> elements, MarketAPI market, float width) {
+        List<CargoStackAPI> items = resultOrganiser.getColonyItems(resultSet, market);
+        if (items.isEmpty()) {
+            return;
+        }
+        elements.add(new Spacer(UiConstants.DEFAULT_SPACER));
+        CargoAPI cargo = StelnetHelper.makeCargoFromStacks(items);
+        ShowCargo showCargo = new ShowCargo(
+            cargo,
+            L10n.get(QueryL10n.MATCHING_COLONY_ITEMS),
+            L10n.get(QueryL10n.NO_MATCHING_COLONY_ITEMS),
+            new Size(width, 0)
+        );
+        showCargo.setTitleColor(getSupportColor(market.getFaction()));
+        elements.add(showCargo);
     }
 
     protected abstract void addResults(List<Renderable> elements, float width);

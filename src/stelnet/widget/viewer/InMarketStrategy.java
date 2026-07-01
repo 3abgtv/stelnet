@@ -1,6 +1,7 @@
 package stelnet.widget.viewer;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -9,10 +10,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import stelnet.util.CollectionUtils;
 import stelnet.util.Excluder;
 import stelnet.util.L10n;
+import stelnet.util.StelnetHelper;
 import stelnet.widget.WidgetL10n;
 
 @Log4j
@@ -23,6 +26,8 @@ import stelnet.widget.WidgetL10n;
 public class InMarketStrategy extends PerMarketStrategy {
 
     private final MarketAPI market;
+    @Setter
+    private boolean colonyItemsMode = false;
 
     @Override
     public List<LocationContent> getData(ButtonManager filteringButtons) {
@@ -30,13 +35,26 @@ public class InMarketStrategy extends PerMarketStrategy {
             log.debug("No market set, returning empty data.");
             return getEmptyData();
         }
-        log.debug("Adding data for market " + market.getName());
-        List<LocationContent> data = new LinkedList<>();
-        for (SubmarketAPI submarket : getSubmarkets(market)) {
-            log.debug("Processing submarket " + submarket.getNameOneLine());
-            processSubmarket(new LocationInfo(submarket), submarket, filteringButtons, data);
+        if (colonyItemsMode) {
+            CargoAPI items = StelnetHelper.getColonyItems(market);
+            log.debug("Found " + items.getStacksCopy().size() + " colony items in " + market.getName());
+            return Collections.singletonList(
+                new LocationContent(
+                    new LocationInfo(market),
+                    items,
+                    Collections.<FleetMemberAPI>emptyList()
+                )
+            );
         }
-        return data;
+        else {
+            log.debug("Adding data for market " + market.getName());
+            List<LocationContent> data = new LinkedList<>();
+            for (SubmarketAPI submarket : getSubmarkets(market)) {
+                log.debug("Processing submarket " + submarket.getNameOneLine());
+                processSubmarket(new LocationInfo(submarket), submarket, filteringButtons, data);
+            }
+            return data;
+        }
     }
 
     private List<SubmarketAPI> getSubmarkets(MarketAPI market) {

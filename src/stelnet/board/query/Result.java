@@ -2,12 +2,15 @@ package stelnet.board.query;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoStackAPI;
+import com.fs.starfarer.api.campaign.SpecialItemData;
+import com.fs.starfarer.api.campaign.SpecialItemSpecAPI;
 import com.fs.starfarer.api.campaign.SubmarketPlugin.TransferAction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,7 +64,7 @@ public class Result implements Comparable<Result> {
         this.object = cargoStack;
         this.market = market;
         this.submarket = submarket;
-        this.isPurchasable = !submarket.getPlugin().isIllegalOnSubmarket(cargoStack, TransferAction.PLAYER_BUY);
+        this.isPurchasable = submarket != null && !submarket.getPlugin().isIllegalOnSubmarket(cargoStack, TransferAction.PLAYER_BUY);
         this.count = (int) cargoStack.getSize();
         this.hashCode = hashCode();
     }
@@ -92,6 +95,10 @@ public class Result implements Comparable<Result> {
 
     public boolean isPerson() {
         return object instanceof PersonAPI;
+    }
+
+    public boolean isColonyItem() {
+        return isCargoStack() && submarket == null;
     }
 
     @Override
@@ -133,9 +140,15 @@ public class Result implements Comparable<Result> {
             return cargoStack.getFighterWingSpecIfWing().getVariant().getHullSpec().getSpriteName();
         }
         if (cargoStack.isSpecialStack()) {
-            String id = cargoStack.getSpecialDataIfSpecial().getData();
-            HullModSpecAPI hullModSpec = Global.getSettings().getHullModSpec(id);
-            return hullModSpec.getSpriteName();
+            SpecialItemData special = cargoStack.getSpecialDataIfSpecial();
+            if (special.getId().equals(Items.TAG_MODSPEC)) {
+                HullModSpecAPI hullModSpec = Global.getSettings().getHullModSpec(special.getData());
+                return hullModSpec.getSpriteName();
+            }
+            else {
+                SpecialItemSpecAPI itemSpec = Global.getSettings().getSpecialItemSpec(special.getId());
+                return itemSpec.getIconName();
+            }
         }
         return null;
     }

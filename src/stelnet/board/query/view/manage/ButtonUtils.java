@@ -9,11 +9,7 @@ import stelnet.board.query.QueryManager;
 import stelnet.board.query.grouping.GroupingStrategy;
 import stelnet.board.query.provider.DmodProvider;
 import stelnet.board.query.view.FilteringButton;
-import stelnet.filter.Filter;
-import stelnet.filter.ResultFleetMemberWithoutDMod;
-import stelnet.filter.ResultFleetMemberWithoutDModCount;
-import stelnet.filter.ResultIsFriendly;
-import stelnet.filter.ResultIsPurchasable;
+import stelnet.filter.*;
 import stelnet.util.CommonL10n;
 import stelnet.util.L10n;
 import uilib.Button;
@@ -78,7 +74,19 @@ public class ButtonUtils {
             new FilterSetAwareButton(
                 manager,
                 L10n.get(QueryL10n.RESULTS_ONLY_FRIENDLY),
-                new ResultIsFriendly(),
+                new ResultMarketFilter(new FactionIsFriendly()),
+                manager.getOtherFilters()
+            ),
+            new FilterSetAwareButton(
+                manager,
+                L10n.get(QueryL10n.RESULTS_ONLY_HOSTILE),
+                new ResultMarketFilter(new FactionIsHostile()),
+                manager.getOtherFilters()
+            ),
+            new FilterSetAwareButton(
+                manager,
+                L10n.get(QueryL10n.RESULTS_EXCLUDE_PLAYER),
+                new ResultMarketFilter(new LogicalNot(new FactionIsPlayer())),
                 manager.getOtherFilters()
             ),
         };

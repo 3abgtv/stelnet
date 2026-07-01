@@ -4,11 +4,13 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.campaign.econ.CommodityOnMarketAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
@@ -76,6 +78,27 @@ public class StelnetHelper {
         }
         CollectionUtils.reduce(ships, filters);
         return ships;
+    }
+
+    public static CargoAPI getColonyItems(MarketAPI market) {
+        CargoAPI colonyItems = Global.getFactory().createCargo(true);
+        if (market == null) {
+            return colonyItems;
+        }
+        for (Industry industry : market.getIndustries()) {
+            String aiCoreId = industry.getAICoreId();
+            if (aiCoreId != null) {
+                colonyItems.addItems(CargoAPI.CargoItemType.RESOURCES, aiCoreId, 1);
+            }
+            List<SpecialItemData> visibleInstalledItems = industry.getVisibleInstalledItems();
+            if (visibleInstalledItems != null) {
+                for (SpecialItemData specialItem : visibleInstalledItems) {
+                    colonyItems.addSpecial(specialItem, 1f);
+                }
+            }
+        }
+        colonyItems.sort();
+        return colonyItems;
     }
 
     public static Set<SubmarketAPI> getAllWithAccess() {

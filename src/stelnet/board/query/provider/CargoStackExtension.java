@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemType;
 import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.SpecialItemData;
+import com.fs.starfarer.api.campaign.SpecialItemSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -16,10 +17,20 @@ public class CargoStackExtension {
             return asCargoStack((FighterWingSpecAPI) object);
         }
         if (object instanceof HullModSpecAPI) {
-            return asCargoStack((HullModSpecAPI) object);
+            String hullModId = ((HullModSpecAPI) object).getId();
+            return asCargoStack(new SpecialItemData(Items.TAG_MODSPEC, hullModId));
         }
         if (object instanceof WeaponSpecAPI) {
             return asCargoStack((WeaponSpecAPI) object);
+        }
+        if (object instanceof SpecialItemData) {
+            return asCargoStack((SpecialItemData) object);
+        }
+        if (object instanceof SpecialItemSpecAPI) {
+            return asCargoStack((SpecialItemSpecAPI) object);
+        }
+        if (object instanceof String) {
+            return asCargoStack((String) object);
         }
         return null;
     }
@@ -30,17 +41,25 @@ public class CargoStackExtension {
         return getValidStack(stack);
     }
 
-    public static CargoStackAPI asCargoStack(HullModSpecAPI hullMod) {
-        String hullModId = hullMod.getId();
-        SpecialItemData specialItemData = new SpecialItemData(Items.TAG_MODSPEC, hullModId);
-        CargoStackAPI stack = Global.getFactory().createCargoStack(CargoItemType.SPECIAL, specialItemData, null);
-        return getValidStack(stack);
-    }
-
     public static CargoStackAPI asCargoStack(WeaponSpecAPI weaponSpec) {
         String weaponId = weaponSpec.getWeaponId();
         CargoStackAPI stack = Global.getFactory().createCargoStack(CargoItemType.WEAPONS, weaponId, null);
         return getValidStack(stack);
+    }
+
+    public static CargoStackAPI asCargoStack(String resourceId) {
+        CargoStackAPI stack = Global.getFactory().createCargoStack(CargoItemType.RESOURCES, resourceId, null);
+        return getValidStack(stack);
+    }
+
+    public static CargoStackAPI asCargoStack(SpecialItemData special) {
+        CargoStackAPI stack = Global.getFactory().createCargoStack(CargoItemType.SPECIAL, special, null);
+        return getValidStack(stack);
+    }
+
+    public static CargoStackAPI asCargoStack(SpecialItemSpecAPI special) {
+        SpecialItemData item = new SpecialItemData(special.getId(), null);
+        return asCargoStack(item);
     }
 
     public static String getManufacturer(Object object) {

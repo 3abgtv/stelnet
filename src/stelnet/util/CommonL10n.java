@@ -14,6 +14,7 @@ public enum CommonL10n {
     CARRIERS,
     CAUTIOUS,
     CIVILIANS,
+    COLONY_ITEMS,
     COMMODITIES,
     CRUISERS,
     DESTROYERS,

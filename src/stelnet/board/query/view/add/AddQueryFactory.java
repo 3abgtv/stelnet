@@ -89,6 +89,7 @@ public class AddQueryFactory extends QueryFactory implements RenderableFactory {
             new QueryTypeButton(this, CommonL10n.PERSONNEL, new PersonnelQueryFactory()),
             new QueryTypeButton(this, CommonL10n.ITEMS, new ItemQueryFactory()),
             new QueryTypeButton(this, CommonL10n.SHIPS, new ShipQueryFactory()),
+            new QueryTypeButton(this, CommonL10n.COLONY_ITEMS, new ColonyItemQueryFactory()),
         };
         queryType[0].setStateOn(true);
         return queryType;

@@ -28,6 +28,7 @@ public class SystemView extends ResultView {
     protected void addResults(List<Renderable> elements, float width) {
         for (MarketAPI market : resultOrganiser.getMarkets(resultSet)) {
             elements.add(new MarketHeader(market, intel));
+            addColonyItems(elements, market, width);
             addPeople(elements, market, width);
             addItems(elements, market, width);
             addShips(elements, market, width);
