@@ -97,6 +97,10 @@ public class Result implements Comparable<Result> {
         return object instanceof PersonAPI;
     }
 
+    public boolean isMarketItem() {
+        return isCargoStack() && submarket != null;
+    }
+
     public boolean isColonyItem() {
         return isCargoStack() && submarket == null;
     }

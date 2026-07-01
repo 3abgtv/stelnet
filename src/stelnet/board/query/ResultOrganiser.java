@@ -54,7 +54,7 @@ public class ResultOrganiser {
     public List<CargoStackAPI> getItems(ResultSet resultSet, MarketAPI market, SubmarketAPI submarket) {
         List<CargoStackAPI> items = new LinkedList<>();
         for (Result result : resultSet.getResultSet()) {
-            if (matches(result, market, submarket) && result.isCargoStack()) {
+            if (matches(result, market, submarket) && result.isMarketItem()) {
                 items.add(result.getCargoStack());
             }
         }
