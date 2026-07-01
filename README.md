@@ -57,6 +57,9 @@ marines
 ```
 </details>
 
+Modded colony items (just like vanilla ones) need to have the `colony_item` tag set, but if a mod has forgotten to do that, the item can still be included manually in `data/stelnet/include/additional_colony_items.csv`.
+New industry AI cores are not automatically found, so they must always be added to `data/stelnet/include/ai_cores.csv`.
+
 
 ### Testing unreleased versions
 
