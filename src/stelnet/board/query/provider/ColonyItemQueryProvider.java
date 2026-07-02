@@ -21,7 +21,7 @@ import uilib.property.Size;
 @ExtensionMethod({ CargoStackExtension.class })
 public class ColonyItemQueryProvider extends QueryProvider {
 
-    private static transient List<CargoStackAPI> allColonyItems;
+    private static List<CargoStackAPI> allColonyItems;
 
     public static void resetCache() {
         allColonyItems = null;
@@ -34,7 +34,7 @@ public class ColonyItemQueryProvider extends QueryProvider {
             addAsCargoStacks(allColonyItems, Includer.getAiCoreIds());
             addAsCargoStacks(allColonyItems, getAllColonyItems());
         }
-        List<CargoStackAPI> cargoStacksCopy = new LinkedList<CargoStackAPI>(allColonyItems);
+        List<CargoStackAPI> cargoStacksCopy = new LinkedList<>(allColonyItems);
         CollectionUtils.reduce(cargoStacksCopy, filters);
         return cargoStacksCopy;
     }
