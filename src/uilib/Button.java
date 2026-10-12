@@ -42,11 +42,20 @@ public class Button extends RenderableComponent implements ButtonHandler {
         this.isEnabled = isEnabled;
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
-        if (size.getWidth() == 0) {
-            size = new Size(Global.getSettings().computeStringWidth(title, Fonts.DEFAULT_SMALL) + 20, size.getHeight());
+        if (size.getWidth() == UiConstants.AUTO_WIDTH) {
+            size = new Size(autoWidth(title), size.getHeight());
         }
         setSize(size);
         setWithScroller(false);
+    }
+
+    /**
+     * Width a {@link Button} sized with {@link UiConstants#AUTO_WIDTH} ends up with.
+     * Callers that need to reserve room for a button before building it - a table
+     * column, for instance - have to ask with the same title to get the same answer.
+     */
+    public static float autoWidth(String title) {
+        return Global.getSettings().computeStringWidth(title, Fonts.DEFAULT_SMALL) + 20;
     }
 
     @Override

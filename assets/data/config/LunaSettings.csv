@@ -16,6 +16,7 @@ stelnet_Commodity_Profit_Header,,Header,"Commodity Module",,,,,Modules
 stelnet_Commodity_Profit_ResultNumber,Number of Results,Int,50,,"Maximum number of profit tables rows.",10,100,Modules
 stelnet_Commodity_Profit_MinQuantity,Minimum Trade Quantity,Int,100,,"Minimum quantity to trade in order to add a profit table row.",10,1000,Modules
 stelnet_Commodity_Profit_MinProfit,Minimum Trade Profit,Int,10000,,"Minimum profit to be made in order to add a profit table row.",1000,100000,Modules
+stelnet_Commodity_Profit_RouteButtons,Route Buttons,Boolean,true,,"Show buttons that lay in a course to the buy and sell markets when hovering over a profit table row.",,,Modules
 ,,,,,,,,
 stelnet_Contacts_Header,,Header,"Contacts Module",,,,,Modules
 stelnet_Contacts_Sebestyen,Call Me Maybe,Boolean,true,,"Allow remotely calling Sebestyen, who is a hidden contact (does not normally show in a Contact intel).

@@ -22,6 +22,11 @@ public enum BooleanSettings {
     UNINSTALL("stelnet_General_Advanced_Uninstall"),
 
     /**
+     * Commodity module configuration.
+     */
+    COMMODITY_PROFIT_ROUTE_BUTTONS("stelnet_Commodity_Profit_RouteButtons"),
+
+    /**
      * Contacts module configuration.
      */
     CONTACTS_MISSIONLESS("stelnet_Contacts_Missionless"),

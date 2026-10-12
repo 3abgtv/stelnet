@@ -5,14 +5,19 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import stelnet.board.commodity.CommodityL10n;
 import stelnet.board.commodity.price.DemandPrice;
 import stelnet.board.commodity.price.Price;
 import stelnet.board.commodity.price.SupplyPrice;
+import stelnet.util.L10n;
 import stelnet.util.StelnetHelper;
+import stelnet.widget.heading.GoButton;
+import uilib.CellAction;
 import uilib.TableContentRow;
 
 @Getter
@@ -20,6 +25,14 @@ import uilib.TableContentRow;
 public class ProfitTableRow implements Comparable<ProfitTableRow>, TableContentRow {
 
     public static int MINIMUM_QUANTITY = 100;
+    public static boolean SHOW_ROUTE_BUTTONS = true;
+
+    /**
+     * Indices of the blank columns the route buttons are drawn over. They have to line
+     * up with the header layout in {@link ProfitTableContent}.
+     */
+    private static final int BUY_BUTTON_COLUMN = 3;
+    private static final int SELL_BUTTON_COLUMN = 6;
 
     private final List<Object> elements = new LinkedList<>();
     private final MarketAPI buyMarket;
@@ -40,8 +53,10 @@ public class ProfitTableRow implements Comparable<ProfitTableRow>, TableContentR
         Color rowColor = getRowColor(Misc.getTextColor());
         addCell(rowColor, Misc.getDGSCredits(profit) + "  (" + Misc.getWithDGS(quantity) + ")");
         addCell(buyMarket.getTextColorForFactionOrPlanet(), StelnetHelper.getMarketWithFactionName(buyMarket));
+        addCell(rowColor, "");
         addCell(rowColor, Misc.getDGSCredits(buyPrice));
         addCell(sellMarket.getTextColorForFactionOrPlanet(), StelnetHelper.getMarketWithFactionName(sellMarket));
+        addCell(rowColor, "");
         addCell(rowColor, Misc.getDGSCredits(sellPrice));
         addCell(rowColor, String.format("%.1f", getDistance()));
     }
@@ -61,6 +76,38 @@ public class ProfitTableRow implements Comparable<ProfitTableRow>, TableContentR
     @Override
     public Object[] buildObjectArray() {
         return elements.toArray();
+    }
+
+    /**
+     * The two "lay in a course" buttons, drawn over the blank columns that follow each
+     * market name. A market can be both the best place to buy from and the best place
+     * to sell to, in which case a single button is enough.
+     */
+    @Override
+    public List<CellAction> getCellActions() {
+        if (!SHOW_ROUTE_BUTTONS) {
+            return Collections.emptyList();
+        }
+        List<CellAction> actions = new LinkedList<>();
+        actions.add(new CellAction(BUY_BUTTON_COLUMN, routeButton(buyMarket, CommodityL10n.ROUTE_TO_BUY)));
+        if (!isSameMarket()) {
+            actions.add(new CellAction(SELL_BUTTON_COLUMN, routeButton(sellMarket, CommodityL10n.ROUTE_TO_SELL)));
+        }
+        return actions;
+    }
+
+    private GoButton routeButton(MarketAPI market, CommodityL10n title) {
+        return new GoButton(market, L10n.get(title));
+    }
+
+    private boolean isSameMarket() {
+        if (buyMarket == sellMarket) {
+            return true;
+        }
+        if (buyMarket == null || sellMarket == null || buyMarket.getId() == null) {
+            return false;
+        }
+        return buyMarket.getId().equals(sellMarket.getId());
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import stelnet.board.commodity.CommodityL10n;
 import stelnet.util.L10n;
+import uilib.Button;
 import uilib.TableContent;
 
 @RequiredArgsConstructor
@@ -15,28 +16,61 @@ public class ProfitTableContent implements TableContent {
     public static int MAX_ROWS = 50;
     public static int MINIMUM_PROFIT_VALUE = 10000;
 
+    private static final float BUTTON_COLUMN_MARGIN = 6f;
+
+    /**
+     * Proportions the original seven columns shared the table width in, still used for
+     * whatever width is left once the two button columns have taken their pixels.
+     */
+    private static final float[] DATA_COLUMN_RATIOS = { .05f, .17f, .22f, .12f, .22f, .12f, .1f };
+
     private final List<MarketAPI> sellMarkets;
     private final List<MarketAPI> buyMarkets;
     private final String commodityId;
 
+    /**
+     * Two blank-titled columns are inserted after the market names to hold the "lay in a
+     * course" buttons that {@link ProfitTableRow} draws over the table. They are sized in
+     * pixels rather than fractions, because a button is as wide as its own label and
+     * would otherwise spill over its neighbours; the remaining columns keep their
+     * original proportions of whatever width is left.
+     */
     @Override
     public Object[] getHeaders(float width) {
+        float buttonColumn = buttonColumnWidth();
+        float dataWidth = width - 2 * buttonColumn;
         return new Object[] {
             "#",
-            .05f * width,
+            DATA_COLUMN_RATIOS[0] * dataWidth,
             L10n.get(CommodityL10n.HEADER_PROFIT),
-            .17f * width,
+            DATA_COLUMN_RATIOS[1] * dataWidth,
             L10n.get(CommodityL10n.HEADER_BUY_LOCATION),
-            .22f * width,
+            DATA_COLUMN_RATIOS[2] * dataWidth,
+            "",
+            buttonColumn,
             L10n.get(CommodityL10n.HEADER_BUY_EXPENSE),
-            .12f * width,
+            DATA_COLUMN_RATIOS[3] * dataWidth,
             L10n.get(CommodityL10n.HEADER_SELL_LOCATION),
-            .22f * width,
+            DATA_COLUMN_RATIOS[4] * dataWidth,
+            "",
+            buttonColumn,
             L10n.get(CommodityL10n.HEADER_SELL_REVENUE),
-            .12f * width,
+            DATA_COLUMN_RATIOS[5] * dataWidth,
             L10n.get(CommodityL10n.HEADER_TRIP),
-            .1f * width,
+            DATA_COLUMN_RATIOS[6] * dataWidth,
         };
+    }
+
+    /**
+     * Wide enough for the wider of the two labels, plus a little breathing room so the
+     * button does not touch the neighbouring column.
+     */
+    private float buttonColumnWidth() {
+        float widest = Math.max(
+            Button.autoWidth(L10n.get(CommodityL10n.ROUTE_TO_BUY)),
+            Button.autoWidth(L10n.get(CommodityL10n.ROUTE_TO_SELL))
+        );
+        return widest + BUTTON_COLUMN_MARGIN;
     }
 
     @Override

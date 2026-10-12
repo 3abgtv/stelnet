@@ -13,17 +13,37 @@ import uilib.property.Size;
 
 public class GoButton extends Button {
 
+    private final MarketAPI market;
+
     public GoButton(final MarketAPI market) {
-        super(new Size(UiConstants.AUTO_WIDTH, UiConstants.DEFAULT_ROW_HEIGHT), L10n.get(CommonL10n.GO), true);
+        this(market, L10n.get(CommonL10n.GO));
+    }
+
+    public GoButton(final MarketAPI market, String title) {
+        super(new Size(UiConstants.AUTO_WIDTH, UiConstants.DEFAULT_ROW_HEIGHT), title, true);
+        this.market = market;
         setPadding(0);
         setCutStyle(CutStyle.C2_MENU);
         setHandler(
             new EventHandler() {
                 @Override
                 public void onConfirm(IntelUIAPI ui) {
-                    Global.getSector().layInCourseFor(market.getPrimaryEntity());
+                    layInCourse();
                 }
             }
         );
+    }
+
+    /**
+     * Lays in a course to this button's market, if it has one to navigate to.
+     */
+    public void layInCourse() {
+        if (market == null) {
+            return;
+        }
+        if (market.getPrimaryEntity() == null) {
+            return;
+        }
+        Global.getSector().layInCourseFor(market.getPrimaryEntity());
     }
 }
