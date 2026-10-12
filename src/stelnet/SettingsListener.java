@@ -101,6 +101,9 @@ public class SettingsListener implements LunaSettingsListener {
             ProfitTableContent.MAX_ROWS = IntSettings.COMMODITY_PROFIT_ROW_NUMBER.get();
             ProfitTableContent.MINIMUM_PROFIT_VALUE = IntSettings.COMMODITY_PROFIT_MIN_PROFIT.get();
             ProfitTableRow.MINIMUM_QUANTITY = IntSettings.COMMODITY_PROFIT_MIN_QUANTITY.get();
+            // Absent until LunaLib picks up the setting, in which case keep them on.
+            Boolean showRouteButtons = BooleanSettings.COMMODITY_PROFIT_ROUTE_BUTTONS.get();
+            ProfitTableRow.SHOW_ROUTE_BUTTONS = showRouteButtons == null || showRouteButtons;
         } else {
             purgeIntel(CommodityBoard.class, CommodityIntel.class, TradeBoard.class);
             log.info("Disabled Commodity module");

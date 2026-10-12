@@ -1,4 +1,7 @@
 Unreleased (TBD)
+- Add route buttons to the Commodity profit table - the buy and sell location of each row gets its own button that
+  lays in a course to that market, so a trade route can be set without leaving the intel screen. Toggle in LunaLib
+  settings (`Modules > Commodity > Route Buttons`), on by default.
 
 
 Version 3.3.0 (2025.05.14)

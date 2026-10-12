@@ -36,4 +36,6 @@ public enum CommodityL10n {
     INTEL_WITH_DEFICIT,
     INTEL_WITH_EXCESS,
     PRICE_CHANGED,
+    ROUTE_TO_BUY,
+    ROUTE_TO_SELL,
 }
