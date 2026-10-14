@@ -19,6 +19,13 @@ public class ProfitTableContent implements TableContent {
     private static final float BUTTON_COLUMN_MARGIN = 6f;
 
     /**
+     * Floor for the whole data side of the table. The button columns are sized in pixels,
+     * so on a narrow panel they are the ones that give way - without a floor the data
+     * columns would keep shrinking with the panel until their width went negative.
+     */
+    private static final float MIN_DATA_WIDTH = 420f;
+
+    /**
      * Proportions the original seven columns shared the table width in, still used for
      * whatever width is left once the two button columns have taken their pixels.
      */
@@ -37,7 +44,7 @@ public class ProfitTableContent implements TableContent {
      */
     @Override
     public Object[] getHeaders(float width) {
-        float buttonColumn = buttonColumnWidth();
+        float buttonColumn = buttonColumnWidth(width);
         float dataWidth = width - 2 * buttonColumn;
         return new Object[] {
             "#",
@@ -63,14 +70,16 @@ public class ProfitTableContent implements TableContent {
 
     /**
      * Wide enough for the wider of the two labels, plus a little breathing room so the
-     * button does not touch the neighbouring column.
+     * button does not touch the neighbouring column - but never at the expense of
+     * {@link #MIN_DATA_WIDTH}: on a panel too narrow for both, the buttons give up their
+     * pixels rather than the columns they sit next to.
      */
-    private float buttonColumnWidth() {
-        float widest = Math.max(
+    private float buttonColumnWidth(float tableWidth) {
+        float natural = Math.max(
             Button.autoWidth(L10n.get(CommodityL10n.ROUTE_TO_BUY)),
             Button.autoWidth(L10n.get(CommodityL10n.ROUTE_TO_SELL))
-        );
-        return widest + BUTTON_COLUMN_MARGIN;
+        ) + BUTTON_COLUMN_MARGIN;
+        return Math.max(0f, Math.min(natural, (tableWidth - MIN_DATA_WIDTH) / 2f));
     }
 
     @Override
