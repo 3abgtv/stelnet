@@ -34,6 +34,6 @@
     "INTEL_WITH_DEFICIT": "All commodities with deficit",
     "INTEL_WITH_EXCESS": "All commodities with excess",
     "PRICE_CHANGED": "{0} (was {1})",
-    "ROUTE_TO_BUY": "Buy route",
-    "ROUTE_TO_SELL": "Sell route"
+    "ROUTE_TO_BUY": "导航",
+    "ROUTE_TO_SELL": "导航"
 }
